@@ -143,8 +143,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-								        <mainClass>com.yash.controller.SolutionAcceleratorApp</mainClass>
-									<resource>reference.conf</resource>
+								       	<resource>reference.conf</resource>
 								</transformer>
 							</transformers>
 						</configuration>
