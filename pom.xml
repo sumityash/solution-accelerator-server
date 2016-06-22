@@ -143,7 +143,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-								       	<resource>reference.conf</resource>
+								       	<!--<resource>reference.conf</resource>-->
 								       	<manifestEntries>
 							                    <Main-Class>com.yash.controller.SolutionAcceleratorApp</Main-Class>
 							                 </manifestEntries>
