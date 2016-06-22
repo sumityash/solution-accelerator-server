@@ -144,6 +144,9 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
 								       	<resource>reference.conf</resource>
+								       	<manifestEntries>
+							                    <Main-Class>com.yash.controller.SolutionAcceleratorApp</Main-Class>
+							                 </manifestEntries>
 								</transformer>
 							</transformers>
 						</configuration>
