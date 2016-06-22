@@ -3,6 +3,7 @@ package com.yash.service
 import com.yash.model.User
 import com.google.gson.Gson
 import com.yash.dao.UserDao._
+import com.yash.model.UserForReg
 
 object UserService {
   
@@ -12,7 +13,7 @@ object UserService {
       gson.toJson(validateUser(userReceived))
     }
     
-  def registerService(userReceived: User)={
+  def registerService(userReceived: UserForReg):String={
     registerUser(userReceived)
     }
   

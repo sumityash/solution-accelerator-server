@@ -11,9 +11,15 @@ object ConnectionManager {
   var connection: Connection = null
 
   def provideConnection(): Connection = {
+    if(connection==null)
+    {
     Class.forName(driver)
     connection = DriverManager.getConnection(databaseUrl, databaseUsername, databasePassword)
     return connection
+    }else
+    {
+      return connection;
+    }
   }
 
 }

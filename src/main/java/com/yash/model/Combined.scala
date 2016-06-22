@@ -1,5 +1,6 @@
 package com.yash.model
 
+
  class Combined{
   var database:Database=_
   var aws:AWS=_

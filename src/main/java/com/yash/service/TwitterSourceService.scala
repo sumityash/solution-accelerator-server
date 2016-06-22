@@ -22,6 +22,7 @@ object TwitterSourceService {
   
   def fetchUserTwitterConfigurationService(userId:String)={
       gson.toJson(getUserTwitterConfiguration(userId))
+  
     }
  
    

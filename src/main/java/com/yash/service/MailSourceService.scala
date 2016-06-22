@@ -47,6 +47,7 @@ object MailSourceService {
   
    def fetchUserEmailConfigurationService(userId:String)={
       gson.toJson(getUserEmailConfiguration(userId))
+    
     }
    
    def insertEmailConfigurationService(emailSource: Email)={

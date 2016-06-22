@@ -22,58 +22,55 @@ object DbDao {
   var urlWithDatabase = null
   var dataBaseList = new ArrayBuffer[String](2)
   var tablesList = new ArrayBuffer[String](2)
+  var aliasList = new ArrayBuffer[String](2)
   var dbmd: DatabaseMetaData = _
   var dbURL: String = _
-  var dbSource: Database = null
+
   var connection: Connection = null
   val driver = "com.mysql.jdbc.Driver"
 
-  def getUserDatabaseConfiguration(userId: String) =
+  def getUserDatabaseConfiguration(userId: String): Database =
     {
-
+      var dbSource: Database = null
       val statement = ConnectionManager.provideConnection().createStatement()
       val resultSet = statement.executeQuery("SELECT * FROM DbConfiguration where userId=" + userId)
 
       try {
         while (resultSet.next()) {
-          val driver = resultSet.getString("driverName")
-          val hostIP = resultSet.getString("hostIP")
+          val driver = resultSet.getString("driver")
+          val hostIP = resultSet.getString("hostIp")
           val username = resultSet.getString("username")
-          val password = resultSet.getString("password")
           val userId = resultSet.getInt("userId")
-          val aliasName = resultSet.getString("aliasName")
-
-          println("driver fetched " + driver)
-
-          dbSource = new Database(driver, hostIP, username, password, userId, aliasName)
+          println("DB FETCHED " + driver + " " + hostIP)
+          dbSource = new Database(driver, hostIP, username, userId)
         }
       } catch {
         case t: Throwable => dbSource
       }
-      System.out.println("Fetched Data... " + dbSource);
       dbSource
     }
 
   def insertUserDatabaseConfiguration(dbSource: Database) =
     {
-      val statement = ConnectionManager.provideConnection().createStatement()
-      val resultSet = statement.executeQuery(("select * from DbConfiguration where aliasName = '" + dbSource.aliasName + "' "))
-      if (resultSet.next()) {
-        statement.executeUpdate("UPDATE DbConfiguration SET driverName = '" + dbSource.driver + "', " + "hostIp = '" + dbSource.hostIp + "' " + "WHERE aliasName = '" + dbSource.aliasName + "' ");
-        System.out.println("Updated in given database...");
-        "Updated in given database..."
-      } else {
-        val prep = ConnectionManager.provideConnection().prepareStatement("INSERT INTO DbConfiguration VALUES (?, ?, ?, ?, ?, ?)")
-        prep.setString(1, dbSource.driver)
-        prep.setString(2, dbSource.hostIp)
-        prep.setString(3, dbSource.username)
-        prep.setString(4, dbSource.password)
-        prep.setInt(5, dbSource.userId)
-        prep.setString(6, dbSource.aliasName)
-
-        prep.executeUpdate()
-        System.out.println("inserted in given database...");
-        "inserted in given database..."
+      try {
+        val statement = ConnectionManager.provideConnection().createStatement()
+        val resultSet = statement.executeQuery(("select * from DbConfiguration where userId = '" + dbSource.userId + "' "))
+        if (resultSet.next()) {
+          statement.executeUpdate("UPDATE DbConfiguration SET driver = '" + dbSource.driver + "', " + "hostIp = '" + dbSource.hostIp + "' " + "WHERE userId = '" + dbSource.userId + "' ");
+          System.out.println("Updated in given database...");
+          "Updated in given database..."
+        } else {
+          val prep = ConnectionManager.provideConnection().prepareStatement("INSERT INTO DbConfiguration VALUES (?, ?,?,?)")
+          prep.setString(1, dbSource.driver)
+          prep.setString(2, dbSource.hostIp)
+          prep.setString(3, dbSource.username)
+          prep.setInt(4, dbSource.userId)
+          prep.executeUpdate()
+          System.out.println("inserted in given database...");
+          "inserted in given database..."
+        }
+      } catch {
+        case t: Throwable => "Problem Occurred While Saving Database Configuration"
       }
     }
 
@@ -96,10 +93,11 @@ object DbDao {
         dataBaseList += ctlgs.getString(1)
         println("" + ctlgs.getString(1));
       }
+      connection.close()
     } catch {
       case t: Throwable => t.printStackTrace() // TODO: handle error
     }
-    println(dataBaseList.toArray)
+
     dataBaseList.toArray
   }
 
@@ -118,11 +116,25 @@ object DbDao {
       while (rs.next()) {
         tablesList += rs.getString(3);
       }
+      connection.close()
     } catch {
       case t: Throwable => t.printStackTrace() // TODO: handle error
     }
     println(tablesList.toArray)
     tablesList.toArray
+  }
+
+  def getAliasNames(userId: String) = {
+
+    val statement = ConnectionManager.provideConnection().createStatement()
+    val resultSet = statement.executeQuery("SELECT aliasName FROM DbConfiguration where userId=" + userId)
+
+    while (resultSet.next()) {
+      aliasList += resultSet.getString(1)
+    }
+    println("List Received " + aliasList)
+    aliasList
+
   }
 
 }

@@ -10,6 +10,7 @@ object ClusterService {
   
   def fetchClusterConfigurationService(userId:String)={
       gson.toJson(getUserClusterConfiguration(userId))
+      
      
     }
     

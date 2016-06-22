@@ -10,6 +10,7 @@ object HdfsService {
   
   def fetchHDFSConfigurationService(userId:String)={
       gson.toJson(getUserHDFSConfiguration(userId))
+    
     }
     
   def insertHDFSConfigurationService(hdfsSource: HDFS)={

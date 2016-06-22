@@ -11,31 +11,37 @@ import com.yash.model.TwitterJsonImplicits._
 import com.yash.model.UserJsonImplicits._
 import com.yash.model.AWSJsonImplicits._
 import com.yash.model.ClusterJsonImplicits._
+import com.yash.model.LightningVizImplicits._
 import com.yash.dao.DbDao
 import spray.httpx.marshalling.ToResponseMarshallable.isMarshallable
 import spray.routing.Directive.pimpApply
 import spray.routing.RequestContext
-import com.yash.service.{ MailSourceService, TwitterSourceService, DbSourceService }
-import com.yash.service.UserService
-import com.yash.service.AwsService
-import com.yash.service.ClusterService
+import com.yash.service.{ MailSourceService, TwitterSourceService, DbSourceService,UserService,AwsService,ClusterService,InsertionService,HdfsService }
 import com.google.gson.Gson
-import com.yash.service.InsertionService
-import com.yash.service.HdfsService
+import com.yash.service.LightningService
+
 
 /**
  * @author dishant.mishra
  * SparkServiceTrait is extending HttpService so that routes can be defined in it
  */
-trait SolutionAcceleratorRoutingTrait extends HttpService {
+trait SolutionAcceleratorRoutingTrait extends HttpService with CORSSupport {
 
   /**
    * all structures you build with the routing are subtypes of type Route
    *  Directives and custom routes are combined via nesting and the ~ operator
    */
   val sparkRoutes =
-    {
+    cors{
       post {
+         path("solutionAccelerator" / "getLightning") {entity(as[LightningViz]){lightningviz=>
+            complete {
+              println(lightningviz.x)
+              println(lightningviz.y)
+              LightningService.getGraphService(lightningviz)
+            }
+         }
+        } ~
         path("solutionAccelerator" / "validate") {
           entity(as[User]) { userReceived =>
             complete {
@@ -44,8 +50,9 @@ trait SolutionAcceleratorRoutingTrait extends HttpService {
           }
         } ~
           path("solutionAccelerator" / "register") {
-            entity(as[User]) { userRegistration =>
+            entity(as[UserForReg]) { userRegistration =>
               complete {
+                println("USer in Trait "+userRegistration.companyName +" "+userRegistration.contactNumber+" "+userRegistration.emailId )
                 UserService.registerService(userRegistration)
               }
             }
@@ -137,7 +144,7 @@ trait SolutionAcceleratorRoutingTrait extends HttpService {
                 }
               }
 
-            } ~
+            }~
             path("solutionAccelerator" / "fetchTwitterConfiguration") {
               parameters('userId) { (userId) =>
                 complete {
@@ -161,6 +168,7 @@ trait SolutionAcceleratorRoutingTrait extends HttpService {
                 complete {
                   println("-----------------------------IN HDFS CONFIG-----------------------")
                   HdfsService.fetchHDFSConfigurationService(userId)
+                 
                 }
               }
             } ~
@@ -168,83 +176,10 @@ trait SolutionAcceleratorRoutingTrait extends HttpService {
               parameters('userId) { (userId) =>
                 complete {
                   println("--------------------------IN CLUSTER CONFIG-----------------------")
-                  ClusterService.fetchClusterConfigurationService(userId)
+                   ClusterService.fetchClusterConfigurationService(userId)
                 }
               }
             }
         }
     }
-
-  /* def checkSource(source: String) =
-    {
-      var reqCon: RequestContext => Unit = null
-      if (source != null && source == "twitter") {
-        reqCon = entity(as[Twitter]) { twitterSource =>
-          complete {
-            println("in twitter")
-            //"in twitter"
-
-            TwitterSourceService.process(twitterSource)
-          }
-        }
-      } else if (source != null && source == "db") {
-        reqCon = entity(as[Database]) { dbSource =>
-          complete {
-            println("in db")
-            // "iN db"
-            DbSourceService.process(dbSource)
-          }
-        }
-      } else if (source != null && source == "email") {
-        reqCon = entity(as[Email]) { emailSource =>
-          complete {
-            println("in email")
-            //"in email"
-            MailSourceService.process(emailSource)
-          }
-        }
-      } else if (source != null && source == "getDatabase") {
-        reqCon = entity(as[String]) { dbUrl =>
-          complete {
-            println("Getting all databases")
-            println(dbUrl)
-            DbSourceService.getDatabase(dbUrl)
-          }
-        }
-      } else {
-        reqCon = complete {
-          "Please provide a valid supported data source"
-        }
-      }
-      reqCon
-    }
-
-}*/
-
-  /* } else if (source != null && source == "getDatabase") {
-        reqCon = entity(as[String]) { dbUrl =>
-          complete {
-            println("Getting all databases")
-            println(dbUrl)
-           val data= DbSourceService.getDatabase(dbUrl)
-           println(data)
-           data
-          }
-        }
-      } else if (source != null && source == "getTables") {
-        reqCon = entity(as[String]) { databaseName =>
-          complete {
-            println("Getting all tables")
-            DbSourceService.getTables(databaseName)
-          }
-        }*/
-  /*  path("solutionAccelerator" / Segment) { source =>
-          {
-            complete {
-              "IN CHECKING SOURCE"
-            }
-          }
-          checkSource(source)
-        } ~*/
-
 }

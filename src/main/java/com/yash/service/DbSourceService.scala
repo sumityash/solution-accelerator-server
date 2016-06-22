@@ -22,6 +22,7 @@ object DbSourceService {
 
     def fetchUserDatabaseConfigurationService(userId:String)={
       gson.toJson(getUserDatabaseConfiguration(userId))
+      
      
     }
     
@@ -40,6 +41,7 @@ object DbSourceService {
       else
         gson.toJson(getAllDatabases(dbUrl))
     }
+  
   def getTables(databaseName: String) =
     {
     var tablesList = getTablesFromDatabase(databaseName)
@@ -49,4 +51,16 @@ object DbSourceService {
       gson.toJson(getTablesFromDatabase(databaseName))
 
     }
+  
+ /* def getAliasList(userId: String) =
+    {
+    var tablesList = getAliasNames(userId)
+      if (tablesList.isEmpty)
+        "No Tables Present"
+      else
+      gson.toJson(getTablesFromDatabase(databaseName))
+
+    }*/
+  
+  
 }

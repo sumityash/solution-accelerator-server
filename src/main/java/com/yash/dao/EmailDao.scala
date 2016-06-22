@@ -16,7 +16,6 @@ import com.yash.utilities.ConnectionManager
 object EmailDao {
   val s3client = new AmazonS3Client()
   val meta = new ObjectMetadata();
-  var emailSource: Email = null
 
   def saveOtherServerAttachments(session: Session, emailObjectReceived: Email, awsSource: AWS): HttpResponse = {
     try {
@@ -173,10 +172,11 @@ object EmailDao {
     }
 
   }
-  def getUserEmailConfiguration(userId: String) =
+  def getUserEmailConfiguration(userId: String): Email =
     {
+      var emailSource: Email = null
       val statement = ConnectionManager.provideConnection().createStatement()
-      val resultSet = statement.executeQuery("SELECT * FROM EmailConfiguration where userId="+userId )
+      val resultSet = statement.executeQuery("SELECT * FROM EmailConfiguration where userId=" + userId)
 
       try {
         while (resultSet.next()) {
@@ -187,39 +187,38 @@ object EmailDao {
           val mailFolder = resultSet.getString("mailFolder")
           val isExchangeServer = resultSet.getString("isExchangeServer")
           val userId = resultSet.getInt("userId")
-          val aliasName = resultSet.getString("aliasName")
-          emailSource = new Email(mailHost, mailPort, mailUsername, mailPassword, mailFolder, isExchangeServer, userId, aliasName)
+          emailSource = new Email(mailHost, mailPort, mailUsername, mailPassword, mailFolder, isExchangeServer, userId)
         }
       } catch {
         case t: Throwable => emailSource // TODO: handle error
       }
-
-      System.out.println("Fetched Data from email " + emailSource);
       emailSource
     }
 
   def insertUserEmailConfigurations(emailSource: Email) = {
 
-    val statement = ConnectionManager.provideConnection().createStatement()
-    val resultSet = statement.executeQuery(("select * from EmailConfiguration where aliasName = '" + emailSource.aliasName + "' "))
-    if (resultSet.next()) {
-      statement.executeUpdate("UPDATE emailconfiguration SET mailHost = '" + emailSource.mailHost + "', " + "mailPort = '" + emailSource.mailPort + "', " + "mailUsername = '" + emailSource.mailUsername + "', " + "mailPassword = '" + emailSource.mailPassword + "', " + "mailFolder = '" + emailSource.mailFolder + "', " + "isExchangeServer = '" + emailSource.isExchangeServer + "' " + "WHERE aliasName = '" + emailSource.aliasName + "' ");
-      System.out.println("updated in email database...");
-      "updated in email database..."
-    } else {
-      val prep = ConnectionManager.provideConnection().prepareStatement("INSERT INTO EmailConfiguration VALUES (?, ?, ?, ?, ?, ?, ? , ?)")
-      prep.setString(1, emailSource.mailHost)
-      prep.setString(2, emailSource.mailPort)
-      prep.setString(3, emailSource.mailUsername)
-      prep.setString(4, emailSource.mailPassword)
-      prep.setString(5, emailSource.mailFolder)
-      prep.setString(6, emailSource.isExchangeServer)
-      prep.setInt(7, emailSource.userId)
-      prep.setString(8, emailSource.aliasName)
-
-      prep.executeUpdate()
-      System.out.println("inserted in email database...");
-      "inserted in email database..."
+    try {
+      val statement = ConnectionManager.provideConnection().createStatement()
+      val resultSet = statement.executeQuery(("select * from EmailConfiguration where userId = '" + emailSource.userId + "' "))
+      if (resultSet.next()) {
+        statement.executeUpdate("UPDATE emailconfiguration SET mailHost = '" + emailSource.mailHost + "', " + "mailPort = '" + emailSource.mailPort + "', " + "mailUsername = '" + emailSource.mailUsername + "', " + "mailPassword = '" + emailSource.mailPassword + "', " + "mailFolder = '" + emailSource.mailFolder + "', " + "isExchangeServer = '" + emailSource.isExchangeServer + "' " + "WHERE userId = '" + emailSource.userId + "' ");
+        System.out.println("updated in email database...");
+        "updated in email database..."
+      } else {
+        val prep = ConnectionManager.provideConnection().prepareStatement("INSERT INTO EmailConfiguration VALUES (?, ?, ?, ?, ?, ?, ? )")
+        prep.setString(1, emailSource.mailHost)
+        prep.setString(2, emailSource.mailPort)
+        prep.setString(3, emailSource.mailUsername)
+        prep.setString(4, emailSource.mailPassword)
+        prep.setString(5, emailSource.mailFolder)
+        prep.setString(6, emailSource.isExchangeServer)
+        prep.setInt(7, emailSource.userId)
+        prep.executeUpdate()
+        System.out.println("inserted in email database...");
+        "Email Configuration's saved"
+      }
+    } catch {
+      case t: Throwable => "Problem Occurred While Saving Email Configuration"
     }
   }
 }

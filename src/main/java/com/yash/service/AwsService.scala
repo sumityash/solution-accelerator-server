@@ -10,6 +10,7 @@ object AwsService {
   
   def fetchAWSConfigurationService(userId:String)={
       gson.toJson(getUserAWSConfiguration(userId))
+   
      
     }
     

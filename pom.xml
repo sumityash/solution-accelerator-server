@@ -7,6 +7,18 @@
 	<name>SolutionServer</name>
 
 	<dependencies>
+
+	<dependency>
+		<groupId>org.scalaj</groupId>
+		<artifactId>scalaj-http_2.10</artifactId>
+		<version>1.1.4</version>
+	</dependency>
+	<dependency>
+		<groupId>org.json4s</groupId>
+		<artifactId>json4s-native_2.10</artifactId>
+		<version>3.2.9</version>
+	</dependency>
+	
 		<dependency>
 			<groupId>io.spray</groupId>
 			<artifactId>spray-json_2.10</artifactId>
