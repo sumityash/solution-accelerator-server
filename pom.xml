@@ -6,19 +6,19 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<name>SolutionServer</name>
 
-<dependencies>
+	<dependencies>
 
-	<dependency>
-		<groupId>org.scalaj</groupId>
-		<artifactId>scalaj-http_2.10</artifactId>
-		<version>1.1.4</version>
-	</dependency>
-	<dependency>
-		<groupId>org.json4s</groupId>
-		<artifactId>json4s-native_2.10</artifactId>
-		<version>3.2.9</version>
-	</dependency>
-	
+		<dependency>
+			<groupId>org.scalaj</groupId>
+			<artifactId>scalaj-http_2.10</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json4s</groupId>
+			<artifactId>json4s-native_2.10</artifactId>
+			<version>3.2.9</version>
+		</dependency>
+
 		<dependency>
 			<groupId>io.spray</groupId>
 			<artifactId>spray-json_2.10</artifactId>
@@ -122,16 +122,57 @@
 			<artifactId>akka-actor_2.10</artifactId>
 			<version>2.3.11</version>
 		</dependency>
-
-
 	</dependencies>
-	<build> <!-- <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
-			<version>2.3</version> </plugin> </plugins> </build> -->
+	<build>
 
 
 		<plugins>
-			<!--<plugin>
-				 <groupId>org.apache.maven.plugins</groupId>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>scala-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>scala-compile-first</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>add-source</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>scala-test-compile</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.1</version>
+			</plugin>
+			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>2.4.1</version>
 				<executions>
@@ -143,52 +184,14 @@
 						<configuration>
 							<transformers>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-								       	<resource>reference.conf</resource>
-								       	<manifestEntries>
-							                    <Main-Class>com.yash.controller.SolutionAcceleratorApp</Main-Class>
-							                 </manifestEntries>
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>reference.conf</resource>
 								</transformer>
 							</transformers>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>-->
-		
-
-   <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4.1</version>
-				<configuration>
-					<!-- get all project dependencies -->
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<!-- MainClass in mainfest make a executable jar -->
-					<archive>
-					  <manifest>
-						<addClasspath>true</addClasspath>
-				       <mainClass>com.yash.controller.SolutionAcceleratorApp</mainClass>
-					  </manifest>
-					</archive>
-
-				</configuration>
-				<executions>
-				  <execution>
-					<id>make-assembly</id>
-                                        <!-- bind to the packaging phase -->
-					<phase>package</phase> 
-					<goals>
-						<goal>single</goal>
-					</goals>
-				  </execution>
-				</executions>
-	</plugin>
-
-			
-        
-	
+			</plugin>
 		</plugins>
 	</build>
 </project>
