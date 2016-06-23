@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.yash</groupId>
 	<artifactId>solution-accelerator-server</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+<!--	<version>1.0.0-SNAPSHOT</version>
 	<name>SolutionServer</name>
-
+-->
 	<dependencies>
 
 	<dependency>
@@ -156,18 +156,30 @@
 			</plugin>-->
 		
 
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>2.4</version>
-            <configuration>
-                <archive>
-                    <manifest>
-                        <mainClass>com.yash.controller.SolutionAcceleratorApp</mainClass>
-                    </manifest>
-                </archive>
-            </configuration>
-        </plugin>
+		 <plugin>
+				    <artifactId>maven-assembly-plugin</artifactId>
+				    <configuration>
+				     <finalName>solution-accelerator-server</finalName>
+				     <archive>
+				      <manifest>
+				       <addClasspath>true</addClasspath>
+				       <mainClass>com.yash.controller.SolutionAcceleratorApp</mainClass>
+				      </manifest>
+				     </archive>
+				     <descriptorRefs>
+				      <descriptorRef>jar-with-dependencies</descriptorRef>
+				     </descriptorRefs>
+				    </configuration>
+				    <executions>
+				     <execution>
+				      <id>make-assembly</id>
+				      <phase>package</phase>
+				      <goals>
+				       <goal>single</goal>
+				      </goals>
+				     </execution>
+				    </executions>
+		   </plugin>
 
 			
         
