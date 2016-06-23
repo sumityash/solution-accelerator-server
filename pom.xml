@@ -130,7 +130,7 @@
 
 
 		<plugins>
-			<plugin>
+			<!--<plugin>
 				 <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>2.4.1</version>
@@ -144,7 +144,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-								       	<!--<resource>reference.conf</resource>-->
+								       	<resource>reference.conf</resource>
 								       	<manifestEntries>
 							                    <Main-Class>com.yash.controller.SolutionAcceleratorApp</Main-Class>
 							                 </manifestEntries>
@@ -153,7 +153,32 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
+			
+			<plugin>
+				    <artifactId>maven-assembly-plugin</artifactId>
+				    <configuration>
+				     <finalName>solution-accelerator-server</finalName>
+				     <archive>
+				      <manifest>
+				       <addClasspath>true</addClasspath>
+				       <mainClass>com.yash.controller.SolutionAcceleratorApp</mainClass>
+				      </manifest>
+				     </archive>
+				     <descriptorRefs>
+				      <descriptorRef>jar-with-dependencies</descriptorRef>
+				     </descriptorRefs>
+				    </configuration>
+				    <executions>
+				     <execution>
+				      <id>make-assembly</id>
+				      <phase>package</phase>
+				      <goals>
+				       <goal>single</goal>
+				      </goals>
+				     </execution>
+				    </executions>
+				   </plugin>
 			
         
 	
