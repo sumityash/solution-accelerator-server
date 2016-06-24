@@ -126,7 +126,7 @@
 	<build>
 
 
-		<finalName>solutionAccelerator</finalName>
+		<finalName>solution-accelerator</finalName>
     
 		<plugins>
 			<plugin>
