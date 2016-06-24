@@ -124,12 +124,9 @@
 		</dependency>
 	</dependencies>
 	<build>
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
 
-		<finalName>solution-accelerator-server</finalName>
+		<finalName>solutionAccelerator</finalName>
     
 		<plugins>
 			<plugin>
