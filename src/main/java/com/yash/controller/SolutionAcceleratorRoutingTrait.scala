@@ -129,7 +129,7 @@ trait SolutionAcceleratorRoutingTrait extends HttpService with CORSSupport {
               {
                 complete {
                   println("-----------------------IN DB CONFIG-------------------------------")
-                  DbSourceService.fetchUserDatabaseConfigurationService(userId)
+                 DbSourceService.fetchUserDatabaseConfigurationService(userId)
                 }
               }
             }
@@ -150,7 +150,6 @@ trait SolutionAcceleratorRoutingTrait extends HttpService with CORSSupport {
                 complete {
                   println("----------------------------IN TWITTER CONFIG--------------------")
                   TwitterSourceService.fetchUserTwitterConfigurationService(userId)
-             
                 }
               }
 
@@ -168,7 +167,6 @@ trait SolutionAcceleratorRoutingTrait extends HttpService with CORSSupport {
                 complete {
                   println("-----------------------------IN HDFS CONFIG-----------------------")
                   HdfsService.fetchHDFSConfigurationService(userId)
-                 
                 }
               }
             } ~

@@ -48,6 +48,7 @@ object DbSourceService {
       if (tablesList.isEmpty)
         "No Tables Present"
       else
+        println("This is the json Table List: "+gson.toJson(getTablesFromDatabase(databaseName)))
       gson.toJson(getTablesFromDatabase(databaseName))
 
     }

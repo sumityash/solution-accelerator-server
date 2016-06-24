@@ -120,7 +120,7 @@ object DbDao {
     } catch {
       case t: Throwable => t.printStackTrace() // TODO: handle error
     }
-    println(tablesList.toArray)
+    println("This is the Table List: "+tablesList.toArray)
     tablesList.toArray
   }
 

@@ -22,7 +22,6 @@ object SolutionAcceleratorApp  {
     val controller = actorsystem.actorOf(Props[SolutionAcceleratorRoutingImpl], "solutionAccelerator")
     /**start a new HTTP server on port given with our service actor as handler*/
     IO(Http) ! Http.Bind(controller, interface = "0.0.0.0", port = 9090)
-
   }
 
 }

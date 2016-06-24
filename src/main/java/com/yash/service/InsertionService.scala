@@ -5,6 +5,8 @@ import com.yash.model.Combined
 object InsertionService {
 
   def checkSource(combinedObject: Combined) = {
+    
+    println("OBJECT IN CHECK SOURCE "+combinedObject.toString())
 
     if (combinedObject.database != null && combinedObject.email == null && combinedObject.twitter == null)
     {
