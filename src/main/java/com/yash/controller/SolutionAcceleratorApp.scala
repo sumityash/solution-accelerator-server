@@ -21,7 +21,7 @@ object SolutionAcceleratorApp  {
     implicit val actorsystem = ActorSystem("solutionAccelerator");
     val controller = actorsystem.actorOf(Props[SolutionAcceleratorRoutingImpl], "solutionAccelerator")
     /**start a new HTTP server on port given with our service actor as handler*/
-    IO(Http) ! Http.Bind(controller, interface = "ec2-54-175-180-236.compute-1.amazonaws.com", port = 9090)
+    IO(Http) ! Http.Bind(controller, interface = "http://ec2-54-175-180-236.compute-1.amazonaws.com", port = 9090)
   }
 
 }
