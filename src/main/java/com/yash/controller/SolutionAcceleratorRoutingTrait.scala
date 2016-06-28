@@ -32,7 +32,7 @@ trait SolutionAcceleratorRoutingTrait extends HttpService with CORSSupport {
    *  Directives and custom routes are combined via nesting and the ~ operator
    */
   val sparkRoutes =
-    cors{
+  /*  cors{*/
       post {
          path("solutionAccelerator" / "getLightning") {entity(as[LightningViz]){lightningviz=>
             complete {
@@ -179,5 +179,5 @@ trait SolutionAcceleratorRoutingTrait extends HttpService with CORSSupport {
               }
             }
         }
-    }
+/*    }*/
 }
